@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="purchase_email_template_notity_users" model="mail.template">
+        <field name="name">Purchase: Purchase Order (Notify Users)</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="subject">New Purchase Order {{ object.name }} has been created</field>
+        <field name="partner_to">{{ ctx.get('notify_partner_id').id }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Dear <t t-out="ctx.get('notify_partner_id').name or ''"/>
+                    <br/>
+                    <br/>
+                </p>
+                <p>
+                    Purchase order <b>
+                    <t t-out="object.name"/>
+                    </b>
+                        has been created in the system, click on view order button to review that order
+                </p>
+                <a t-attf-href="{{object.get_base_url()}}/web#id={{object.id}}&amp;model=purchase.order&amp;view_type=form" style="background-color:#875A7B !important;padding:11px; text-decoration: none; color: #fff; font-size: 12px;font-weight: 400;border-radius:5px;">
+                    View Order
+                </a>
+                <br/>
+                <br/>
+                    Thank You
+            </div>
+        </field>
+        <field name="report_template" ref="purchase.action_report_purchase_order"/>
+        <field name="report_name">PO_{{ (object.name or '').replace('/','_') }}</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+</odoo>
