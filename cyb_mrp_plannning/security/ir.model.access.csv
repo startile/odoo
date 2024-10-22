@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cyb_mrp_plannning_cyb_mrp_plannning,cyb_mrp_plannning.cyb_mrp_plannning,model_cyb_mrp_plannning_cyb_mrp_plannning,base.group_user,1,1,1,1
