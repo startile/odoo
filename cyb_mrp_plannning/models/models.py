@@ -32,7 +32,7 @@ class MrpWorkorder(models.Model):
             next_line_id = work_order_ids[next_line] if next_line < len(work_order_ids) else None
             if next_line_id :
                 next_line_id_obj = self.browse(int(next_line_id))
-                start_date = fields.datetime.now() + timedelta(minutes=10)
+                start_date = fields.datetime.now() + timedelta(minutes=1)
                 planned_end_date = workorder._calculate_date_planned_finished(date_planned_start=start_date)
                 next_line_id_obj.write({
                     'date_planned_start' : start_date,
