@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="view_order_form_view_inherit" model="ir.ui.view">
+            <field name="name">Sale Order Form Inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+
+                    <field name="mrp_production_id" invisible="1"/>
+                    <button name="action_open_mrp_production"
+                            type="object"
+                            string="MRP Order"
+                            attrs="{'invisible': [('mrp_production_id', '=', False)]}"
+                            class="oe_highlight"/>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>
