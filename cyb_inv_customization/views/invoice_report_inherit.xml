@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template inherit_id="account.report_invoice_document" id="report_invoice_document_inherit">
+        <xpath expr="//div[@name='origin']" position="attributes">
+            <attribute name="class">col-auto col-3 mw-100 mb-2 d-none</attribute>
+        </xpath>
+        <xpath expr="//span[@t-field='line.product_uom_id']" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//p[@name='payment_communication']" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('page')]" position="after">
+            <div style="page-break-before:always; text-align: center; width: 100%;">
+                <t t-foreach="o.references_images_ids" t-as="i">
+                    <div style="display: inline-block; width: 100%;">
+                        <t t-if="i.image">
+                            <img t-att-src="image_data_uri(i.image)" class="mt-3"
+                                 style="max-height:140mm;max-width:210mm"
+                                 alt="Art Image"/>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
