@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_invoice_reference_images,invoice_reference_images,model_invoice_reference_images,,1,1,1,1
+access_invoice_reference_attachment,invoice_reference_attachment,model_invoice_reference_attachment,,1,1,1,1

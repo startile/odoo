@@ -25,6 +25,7 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'data/mail_template_data.xml',
         'views/invoice_report_inherit.xml',
         'views/account_move_form_inherit.xml',
     ],

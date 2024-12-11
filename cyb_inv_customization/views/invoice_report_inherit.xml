@@ -13,12 +13,12 @@
         </xpath>
         <xpath expr="//div[hasclass('page')]" position="after">
             <div style="page-break-before:always; text-align: center; width: 100%;">
-                <t t-foreach="o.references_images_ids" t-as="i">
-                    <div style="display: inline-block; width: 100%;">
-                        <t t-if="i.image">
-                            <img t-att-src="image_data_uri(i.image)" class="mt-3"
-                                 style="max-height:140mm;max-width:210mm"
-                                 alt="Art Image"/>
+                <t t-foreach="o.references_attachment_ids.filtered(lambda a: a.attachment_name and (a.attachment_name.endswith('.jpg') or a.attachment_name.endswith('.png') or a.attachment_name.endswith('.jpeg')))"
+                   t-as="i">
+                    <div style="display: inline-block; width: 100%; margin-bottom: 10px;">
+                        <t t-if="i.attachment">
+                            <img t-att-src="image_data_uri(i.attachment)"
+                                 style="max-height:140mm; max-width:210mm;" alt="Reference Image"/>
                         </t>
                     </div>
                 </t>

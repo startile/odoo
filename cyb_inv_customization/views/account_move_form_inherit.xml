@@ -8,20 +8,19 @@
         <field name="arch" type="xml">
 
             <xpath expr="//page[@name='other_info']" position="before">
-                <page id="images" string="Images" name="images">
-
-                    <field name="references_images_ids">
+                <page id="attachments" string="Attachments" name="attachment">
+                    <field name="references_attachment_ids">
                         <tree editable="bottom">
                             <field name="move_id" invisible="1"/>
-                            <field name="image_name" invisible="1"/>
-                            <field name="image" filename="image_name" widget="image" options="{'size': [0, 300]}"/>
+                            <field name="attachment" filename="attachment_name"/> <!-- widget="image" options="{'size': [0, 300]}"-->
+                            <field name="attachment_name" invisible="0"/>
                         </tree>
                     </field>
                 </page>
             </xpath>
 
             <xpath expr="//button[@name='button_draft']" position="after">
-                <button name="action_invoice_sent" type="object" string="SUBMIT SAMPLE ORDER" context="{'image_mode':True}" class="btn btn-primary"/>
+                <button name="action_invoice_sent" type="object" string="SUBMIT SAMPLE ORDER" context="{'attachment_mode':True}" class="btn btn-primary"/>
             </xpath>
 
         </field>

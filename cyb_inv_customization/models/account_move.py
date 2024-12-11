@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-
+import base64
+import imghdr
 import io
 from base64 import b64encode
 
@@ -8,25 +9,25 @@ from odoo import models, fields, api, _
 from odoo.tools import get_lang
 
 
-class InvoiceReferenceImages(models.Model):
-    _name = 'invoice.reference.images'
+class InvoiceReferenceAttachment(models.Model):
+    _name = 'invoice.reference.attachment'
 
     move_id = fields.Many2one('account.move')
-    image = fields.Image(string='Image', required=1)
-    image_name = fields.Char()
+    attachment = fields.Binary(string='Attachments', required=1)
+    attachment_name = fields.Char()
     ir_attachment_id = fields.Many2one('ir.attachment')
 
     def _create_or_update_attachment(self):
         for rec in self:
             if rec.ir_attachment_id:
                 rec.ir_attachment_id.write({
-                    'datas': rec.image,
+                    'datas': rec.attachment,
                 })
             else:
                 ir_attachment_id = self.env['ir.attachment'].create({
-                    'name': f"Reference_Image_{rec.id}.png",
+                    'name': f"Reference_attachment_{rec.id}",
                     'type': 'binary',
-                    'datas': rec.image,
+                    'datas': rec.attachment,
                     'res_model': 'account.move',
                     'res_id': rec.move_id.id,
                     'mimetype': 'image/png',
@@ -35,12 +36,12 @@ class InvoiceReferenceImages(models.Model):
 
     @api.model
     def create(self, vals):
-        record = super(InvoiceReferenceImages, self).create(vals)
+        record = super(InvoiceReferenceAttachment, self).create(vals)
         record._create_or_update_attachment()
         return record
 
     def write(self, vals):
-        res = super(InvoiceReferenceImages, self).write(vals)
+        res = super(InvoiceReferenceAttachment, self).write(vals)
         self._create_or_update_attachment()
         return res
 
@@ -48,7 +49,7 @@ class InvoiceReferenceImages(models.Model):
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    references_images_ids = fields.One2many('invoice.reference.images', 'move_id')
+    references_attachment_ids = fields.One2many('invoice.reference.attachment', 'move_id')
 
     def generate_xlsx_report(self):
         output = io.BytesIO()
@@ -77,7 +78,7 @@ class AccountMove(models.Model):
         {partner.name or ''}
         {partner.street or ''}
         {partner.street2 or ''}
-        {partner.city or ''} {self.partner_id.zip or ''}
+        {partner.city or ''} {partner.zip or ''}
         {partner.country_id.name or ''}
         """
         sheet.merge_range('C4:C8', recipient_address, normal_left)
@@ -94,19 +95,36 @@ class AccountMove(models.Model):
         for line in self.invoice_line_ids:
             row += 1
             sheet.write(row, 0, line.product_id.name or _('Undefined'), border_format)
-            sheet.write(row, 1, f"{line.quantity} Units", border_format)
+            sheet.write(row, 1, f"{line.quantity} {line.product_uom_id.name}", border_format)
             sheet.write(row, 2, f"{line.price_unit:.2f}", border_format)
 
         workbook.close()
         output.seek(0)
         return output.getvalue()
 
+    # def get_image_from_attachments(self):
+    #     image_attachments = []
+    #     for ref_attachment in self.references_attachment_ids:
+    #         if ref_attachment.attachment:
+    #             try:
+    #                 decoded_image = base64.b64decode(ref_attachment.attachment, validate=True)
+    #                 image_type = imghdr.what(None, decoded_image)
+    #                 if image_type:
+    #                     image_attachments.append(ref_attachment)
+    #             except Exception:
+    #                 pass
+    #     return image_attachments
+
     def action_invoice_sent(self):
         """ Open a window to compose an email, with the edi invoice template
             message loaded by default
         """
         self.ensure_one()
-        template = self.env.ref(self._get_mail_template(), raise_if_not_found=False)
+        if self._context.get('attachment_mode'):
+            template = self.env.ref('cyb_inv_customization.email_template_sample_order_invoice',
+                                    raise_if_not_found=False)
+        else:
+            template = self.env.ref(self._get_mail_template(), raise_if_not_found=False)
         lang = False
         if template:
             lang = template._render_lang(self.ids)[self.id]
@@ -115,11 +133,12 @@ class AccountMove(models.Model):
         compose_form = self.env.ref('account.account_invoice_send_wizard_form', raise_if_not_found=False)
 
         attachments = []
-        if self._context.get('image_mode'):
-            attachments += self.references_images_ids.mapped('ir_attachment_id').ids
+        if self._context.get('attachment_mode'):
+            # attachments += [attachment.id for attachment in self.get_image_from_attachments()]
+            attachments += self.references_attachment_ids.mapped('ir_attachment_id').ids
             xlsx_data = self.generate_xlsx_report()
             xlsx_attachment = self.env['ir.attachment'].create({
-                'name': f"Invoice_{self.name}.xlsx",
+                'name': f"Packing List {self.name}.xlsx",
                 'type': 'binary',
                 'datas': b64encode(xlsx_data),
                 'res_model': 'account.move',
@@ -164,7 +183,3 @@ class AccountMove(models.Model):
             return self.env['ir.actions.report']._action_configure_external_report_layout(report_action)
 
         return report_action
-
-
-class AccountInvoiceSend(models.TransientModel):
-    _inherit = 'account.invoice.send'
