@@ -92,7 +92,7 @@ class AccountMove(models.Model):
         sheet.write('C13', "Unit Price", bold_center)
 
         row = 13
-        for line in self.invoice_line_ids:
+        for line in self.invoice_line_ids.filtered(lambda x:x.display_type=='product'):
             row += 1
             sheet.write(row, 0, line.product_id.name or _('Undefined'), border_format)
             sheet.write(row, 1, f"{line.quantity} {line.product_uom_id.name}", border_format)
