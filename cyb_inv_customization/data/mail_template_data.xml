@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_sample_order_invoice" model="mail.template">
+            <field name="name">Invoice: Sample Order</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="email_from">
+                {{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted or '').replace('\n', '').replace('\r', '').replace('\t', '') }}
+            </field>
+            <field name="partner_to">{{ (object.partner_id.email or '').replace('\n', '').replace('\r', '').replace('\t', '') }}</field>
+            <field name="subject">
+                NEW SAMPLE ORDER: (Ref {{ (object.name or 'n/a').replace('\n', '').replace('\r', '').replace('\t', '') }})
+            </field>
+            <field name="description">Sent to internal team with customer invoices and attachment</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        Dear Production Team,
+                        <br/>
+                        Please find below the details for the sample order for invoice <strong><t t-out="(object.name or '').replace('\n', '').replace('\r', '').replace('\t', '')"/></strong>
+                        <br/><br/>
+                        <strong>Order:</strong>
+                        <br/>
+                        <ul>
+                            <t t-foreach="object.invoice_line_ids" t-as="line">
+                                <strong><li><t t-out="(line.name or '').replace('\n', '').replace('\r', '').replace('\t', '')"/> - <t t-out="(line.product_uom_id.name or '').replace('\n', '').replace('\r', '').replace('\t', '')"/></li></strong>
+                            </t>
+                        </ul>
+                        <br/>
+                        Samples need to be manufactured by: <strong>TBD</strong>
+                        <br/><br/>
+                        Please use the attached reference images for glaze verification.
+                        <br/><br/>
+                        Shipment Packing list is attached.
+                        <br/><br/>
+                        <strong>Shipping Address:</strong>
+                        <br/>
+                        <t t-out="(object.partner_id.street or '').replace('\n', '').replace('\r', '').replace('\t', '')"/> - <t t-out="(object.partner_id.street2 or '').replace('\n', '').replace('\r', '').replace('\t', '')"/>
+                        <br/>
+                        <t t-out="(object.partner_id.city or '').replace('\n', '').replace('\r', '').replace('\t', '')"/> - <t t-out="(object.partner_id.zip or '').replace('\n', '').replace('\r', '').replace('\t', '')"/>
+                        <br/>
+                        <t t-out="(object.partner_id.country_id.name or '').replace('\n', '').replace('\r', '').replace('\t', '')"/>
+                        <br/><br/>
+                        <strong>Thank you!</strong>
+                        <br/>
+                        <strong>MM+ AK</strong>
+                    </p>
+                </div>
+            </field>
+            <field name="lang">{{ object.partner_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>
