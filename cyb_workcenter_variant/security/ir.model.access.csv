@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_workcenter_missing_variant,workcenter_missing_variant,model_workcenter_missing_variant,,1,1,1,1
+access_workcenter_variant_check_wizard,workcenter_variant_check_wizard,model_workcenter_variant_check_wizard,,1,1,1,1
