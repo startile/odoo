@@ -10,7 +10,7 @@
             <xpath expr="//sheet" position="before">
                 <header>
                     <button name="action_check_variants_in_product_template" type="object"
-                            string="Check Variant's Different" class="oe_highlight"/>
+                            string="Check Missing Variants" class="oe_highlight"/>
                 </header>
             </xpath>
 
