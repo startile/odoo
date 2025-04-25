@@ -10,7 +10,10 @@
             <xpath expr="//sheet" position="before">
                 <header>
                     <button name="action_check_variants_in_product_template" type="object"
-                            string="Check Missing Variants" class="oe_highlight"/>
+                            string="Check Variant's Different" class="oe_highlight"/>
+                    <button name="action_add_variants_to_capacities" type="object"
+                            string="Add to Capacities" class="oe_highlight"
+                            attrs="{'invisible': [('missing_variant_ids', '=', [])]}"/>
                 </header>
             </xpath>
 
@@ -18,7 +21,7 @@
                 <page string="Missing Product Variants" name="capacity">
                     <field name="missing_variant_ids">
                         <tree create="false">
-                            <field name="workcenter_id" column_invisible="1"/>
+                            <field name="workcenter_id" invisible="1"/>
                             <field name="product_id"/>
                         </tree>
                     </field>
