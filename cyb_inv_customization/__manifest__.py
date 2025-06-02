@@ -20,15 +20,25 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['account', 'report_xlsx'],
+    'depends': ['account', 'report_xlsx', 'sale'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
         'data/mail_template_data.xml',
         'views/invoice_report_inherit.xml',
+        'views/so_report_inherit.xml',
         'views/account_move_form_inherit.xml',
+        'views/res_company.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'cyb_inv_customization/static/src/css/report_font.scss',
+        ],
+        'web.report_assets_common': [
+            'cyb_inv_customization/static/src/css/report_font.scss',
+        ]
+    },
     'application': True,
     'installable': True,
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_company_form_add_html" model="ir.ui.view">
+        <field name="name">view_company_form_add_html</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='general_info']" position="after">
+                <page string="Installation Instructions">
+                    <group col="12" string="Installation Instructions">
+                        <group colspan="12">
+                            <field name="startile_installation_instruction" placeholder="Installation Instructions"
+                                   colspan="2" nolabel="1"/>
+                        </group>
+                    </group>
+                </page>
+                <page string="Terms &amp; Conditions">
+                    <group col="12" string="Terms &amp; Conditions on Sale Upon Delivery">
+                        <group colspan="12">
+                            <field name="t_and_c_upon_delivery" placeholder="Terms &amp; Conditions on Sale Upon Delivery"
+                                   colspan="2" nolabel="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

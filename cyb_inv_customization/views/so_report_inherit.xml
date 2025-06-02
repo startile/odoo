@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template inherit_id="sale.report_saleorder_document" id="report_saleorder_document_inherit">
+        <xpath expr="//tbody[hasclass('sale_tbody')]//td[@name='td_subtotal']" position="replace">
+            <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
+                <span t-esc="round(line.price_subtotal, 2)" groups="account.group_show_line_subtotals_tax_excluded"/>
+                <span t-esc="round(line.price_total, 2)" groups="account.group_show_line_subtotals_tax_included"/>
+            </td>
+        </xpath>
+        <xpath expr="//td[@name='td_section_subtotal']/span" position="attributes">
+            <attribute name="t-options"/>
+        </xpath>
+    </template>
+
+</odoo>

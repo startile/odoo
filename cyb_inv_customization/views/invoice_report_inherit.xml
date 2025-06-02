@@ -24,6 +24,29 @@
                 </t>
             </div>
         </xpath>
+        <xpath expr="//tbody[hasclass('invoice_tbody')]//td[hasclass('o_price_total')]" position="replace">
+            <td class="text-end o_price_total">
+                <span class="text-nowrap" t-esc="round(line.price_subtotal, 2)"
+                      groups="account.group_show_line_subtotals_tax_excluded"/>
+                <span class="text-nowrap" t-esc="round(line.price_total, 2)"
+                      groups="account.group_show_line_subtotals_tax_included"/>
+            </td>
+        </xpath>
+        <xpath expr="//tr[hasclass('is-subtotal')]/td/span" position="attributes">
+            <attribute name="t-options"/>
+        </xpath>
+
+        <xpath expr="//div[@id='qrcode']" position="after">
+            <div t-if="o.move_type == 'out_invoice'" style="text-align: justify; text-justify: inter-word;">
+                <div style="page-break-before: always;">
+                    <span t-field="o.company_id.startile_installation_instruction"/>
+                </div>
+
+                <div style="page-break-before: always;">
+                    <span t-field="o.company_id.t_and_c_upon_delivery"/>
+                </div>
+            </div>
+        </xpath>
     </template>
 
 </odoo>
